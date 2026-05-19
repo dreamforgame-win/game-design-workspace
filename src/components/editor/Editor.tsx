@@ -36,6 +36,8 @@ export function MilkdownEditor({ initialValue, onChange }: MilkdownEditorProps) 
       .use(history)
   )
 
+  const ref = useRef<HTMLDivElement>(null)
+
   return (
     <div
       className="milkdown-editor h-full overflow-auto p-4"
@@ -44,7 +46,7 @@ export function MilkdownEditor({ initialValue, onChange }: MilkdownEditorProps) 
         color: 'var(--color-foreground)',
       }}
     >
-      <div ref={get} className="prose-editor" />
+      <div ref={ref} className="prose-editor" />
     </div>
   )
 }
