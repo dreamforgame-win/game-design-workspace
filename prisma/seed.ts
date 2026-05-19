@@ -12,13 +12,13 @@ async function main() {
       where: { name: theme.name },
       update: {
         displayName: theme.displayName,
-        config: theme as unknown as Record<string, unknown>,
+        config: theme as any,
       },
       create: {
         name: theme.name,
         displayName: theme.displayName,
         type: 'builtin',
-        config: theme as unknown as Record<string, unknown>,
+        config: theme as any,
       },
     })
     console.log(`  ✓ Theme: ${theme.displayName}`)
