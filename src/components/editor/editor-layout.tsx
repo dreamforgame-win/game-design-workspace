@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { notFound } from 'next/navigation'
+// notFound is handled by the server page component
 import { MarkdownRenderer } from '@/components/renderer/MarkdownRenderer'
 import { MilkdownEditor } from '@/components/editor/Editor'
 import { EditorToolbar } from '@/components/editor/toolbar'
