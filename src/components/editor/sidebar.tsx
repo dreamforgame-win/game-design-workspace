@@ -2,13 +2,23 @@
 
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
+import { Globe, Lock, ExternalLink } from 'lucide-react'
 
 interface SidebarProps {
   theme: string
   onThemeChange: (theme: string) => void
+  isPublic: boolean
+  onTogglePublic: () => void
+  slug: string
 }
 
-export function EditorSidebar({ theme, onThemeChange }: SidebarProps) {
+export function EditorSidebar({
+  theme,
+  onThemeChange,
+  isPublic,
+  onTogglePublic,
+  slug,
+}: SidebarProps) {
   const { allThemes } = useTheme()
 
   return (
@@ -19,6 +29,48 @@ export function EditorSidebar({ theme, onThemeChange }: SidebarProps) {
         backgroundColor: 'var(--color-card)',
       }}
     >
+      {/* Public Toggle */}
+      <div className="mb-6">
+        <h3
+          className="text-xs font-medium uppercase tracking-wider mb-3"
+          style={{ color: 'var(--color-muted-foreground)' }}
+        >
+          分享
+        </h3>
+        <button
+          onClick={onTogglePublic}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-[var(--radius-sm)] text-sm transition-colors min-h-[44px]"
+          style={{
+            backgroundColor: 'var(--color-secondary)',
+            color: 'var(--color-foreground)',
+          }}
+        >
+          {isPublic ? (
+            <>
+              <Globe className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
+              <span>已公开</span>
+            </>
+          ) : (
+            <>
+              <Lock className="w-4 h-4" style={{ color: 'var(--color-muted-foreground)' }} />
+              <span>未公开</span>
+            </>
+          )}
+        </button>
+        {isPublic && (
+          <a
+            href={`/p/${slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 flex items-center gap-1.5 text-xs transition-colors hover:opacity-80"
+            style={{ color: 'var(--color-primary)' }}
+          >
+            <ExternalLink className="w-3 h-3" />
+            查看公开页
+          </a>
+        )}
+      </div>
+
       {/* Theme Selector */}
       <div className="mb-6">
         <h3

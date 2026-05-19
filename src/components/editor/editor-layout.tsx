@@ -8,7 +8,7 @@ import { EditorSidebar } from '@/components/editor/sidebar'
 import { useEditorStore } from '@/stores/editor-store'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { useTheme } from '@/hooks/useTheme'
-import { updateDocument } from '@/features/documents/actions'
+import { updateDocument, togglePublic } from '@/features/documents/actions'
 
 interface EditorLayoutProps {
   document: {
@@ -36,6 +36,7 @@ export function EditorLayout({ document }: EditorLayoutProps) {
 
   const { setTheme: setGlobalTheme } = useTheme()
   const [activeTheme, setActiveTheme] = useState(document.theme)
+  const [isPublic, setIsPublic] = useState(document.isPublic)
 
   // Initialize store with document content on mount (without marking dirty)
   useEffect(() => {
@@ -65,6 +66,13 @@ export function EditorLayout({ document }: EditorLayoutProps) {
     },
     [document.slug, setGlobalTheme]
   )
+
+  const handleTogglePublic = useCallback(async () => {
+    const result = await togglePublic(document.slug)
+    if (result) {
+      setIsPublic(result.isPublic)
+    }
+  }, [document.slug])
 
   return (
     <div className="h-screen flex flex-col">
@@ -106,6 +114,9 @@ export function EditorLayout({ document }: EditorLayoutProps) {
           <EditorSidebar
             theme={activeTheme}
             onThemeChange={handleThemeChange}
+            isPublic={isPublic}
+            onTogglePublic={handleTogglePublic}
+            slug={document.slug}
           />
         )}
       </div>
