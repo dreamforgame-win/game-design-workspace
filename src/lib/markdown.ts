@@ -4,7 +4,6 @@ import remarkGfm from 'remark-gfm'
 import remarkDirective from 'remark-directive'
 import remarkRehype from 'remark-rehype'
 import type { Plugin } from 'unified'
-import type { Root } from 'hast'
 
 /**
  * Custom remark plugin that transforms directive nodes into hast elements
@@ -14,7 +13,7 @@ import type { Root } from 'hast'
  * :::timeline    →  <directive-timeline>
  * etc.
  */
-export const remarkDirectiveToHast: Plugin<[], Root> = function () {
+export const remarkDirectiveToHast: Plugin<[], any> = function () {
   return (tree: any) => {
     visitDirectives(tree)
   }
@@ -99,5 +98,5 @@ export async function parseMarkdown(markdown: string) {
   const processor = createMarkdownProcessor()
   const ast = processor.parse(markdown)
   const hast = await processor.run(ast)
-  return hast
+  return hast as any
 }
