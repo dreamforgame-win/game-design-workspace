@@ -87,7 +87,8 @@ export function createMarkdownProcessor() {
     .use(remarkGfm)
     .use(remarkDirective)
     .use(remarkDirectiveToHast)
-    .use(remarkRehype, { allowDangerousHtml: true })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .use(remarkRehype as any, { allowDangerousHtml: true })
 }
 
 /**
