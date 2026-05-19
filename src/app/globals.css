@@ -1,0 +1,291 @@
+@import "tailwindcss";
+
+/* ============================================
+   DESIGN TOKEN SYSTEM
+   All visual properties flow from these tokens.
+   Themes override these via [data-theme] selectors.
+   ============================================ */
+
+@layer base {
+  :root {
+    /* === Colors: 极简黑金 (Black Gold) — Default Theme === */
+    --color-background: #0a0a0a;
+    --color-foreground: #fafafa;
+    --color-primary: #d4af37;
+    --color-primary-foreground: #0a0a0a;
+    --color-secondary: #1a1a1a;
+    --color-secondary-foreground: #fafafa;
+    --color-accent: #b8860b;
+    --color-muted: #262626;
+    --color-muted-foreground: #a3a3a3;
+    --color-border: #2a2a2a;
+    --color-card: #111111;
+    --color-card-foreground: #fafafa;
+    --color-destructive: #dc2626;
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+
+    /* === Typography === */
+    --font-heading: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-code: 'JetBrains Mono', ui-monospace, monospace;
+    --font-size-h1: 2.5rem;
+    --font-size-h2: 2rem;
+    --font-size-h3: 1.5rem;
+    --font-size-h4: 1.25rem;
+    --font-size-h5: 1rem;
+    --font-size-h6: 0.875rem;
+    --font-size-body: 1rem;
+    --font-size-small: 0.875rem;
+    --font-weight-heading: 700;
+    --line-height-body: 1.5;
+    --line-height-heading: 1.2;
+
+    /* === Spacing (8dp rhythm) === */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+    --spacing-section: 3rem;
+    --spacing-paragraph: 1.5rem;
+    --content-max-width: 720px;
+
+    /* === Decoration === */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+    --border-width: 1px;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+    /* === Animation === */
+    --transition-fast: 150ms;
+    --transition-normal: 200ms;
+    --transition-slow: 300ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+    --stagger: 80ms;
+  }
+
+  /* === Theme: 修仙卷轴 (Mystic Scroll) === */
+  [data-theme="scroll"] {
+    --color-background: #f5f0e8;
+    --color-foreground: #2c2c2c;
+    --color-primary: #8b4513;
+    --color-primary-foreground: #f5f0e8;
+    --color-secondary: #ede6db;
+    --color-secondary-foreground: #2c2c2c;
+    --color-accent: #4a6741;
+    --color-muted: #e8e0d4;
+    --color-muted-foreground: #6b5c4f;
+    --color-border: #d4c9b8;
+    --color-card: #faf6f0;
+    --color-card-foreground: #2c2c2c;
+    --color-destructive: #b91c1c;
+    --color-success: #15803d;
+    --color-warning: #d97706;
+
+    --font-heading: 'Noto Serif SC', serif;
+    --font-body: 'Noto Sans SC', sans-serif;
+    --radius-md: 4px;
+    --shadow-md: 0 1px 4px rgba(139, 69, 19, 0.1);
+    --stagger: 120ms;
+  }
+
+  /* === Theme: 战争沙盘 (Wargame) === */
+  [data-theme="wargame"] {
+    --color-background: #0d1117;
+    --color-foreground: #c9d1d9;
+    --color-primary: #ff6b35;
+    --color-primary-foreground: #0d1117;
+    --color-secondary: #161b22;
+    --color-secondary-foreground: #c9d1d9;
+    --color-accent: #58a6ff;
+    --color-muted: #21262d;
+    --color-muted-foreground: #8b949e;
+    --color-border: #30363d;
+    --color-card: #161b22;
+    --color-card-foreground: #c9d1d9;
+    --color-destructive: #f85149;
+    --color-success: #3fb950;
+    --color-warning: #d29922;
+
+    --font-heading: 'Rajdhani', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius-md: 2px;
+    --border-width: 1px;
+    --shadow-md: 0 0 8px rgba(88, 166, 255, 0.1);
+    --stagger: 60ms;
+  }
+
+  /* === Base Styles === */
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Focus ring — accessible and visible */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar styling (subtle) */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-muted);
+    border-radius: var(--radius-full);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted-foreground);
+  }
+}
+
+/* === Wargame grid background === */
+[data-theme="wargame"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(88, 166, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 166, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === Scroll theme paper texture === */
+[data-theme="scroll"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   Milkdown Editor Overrides
+   Themed to match our design token system
+   ============================================ */
+.milkdown-editor {
+  .ProseMirror {
+    outline: none;
+    min-height: 300px;
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--color-foreground);
+      font-family: var(--font-heading);
+      font-weight: var(--font-weight-heading);
+    }
+
+    h1 { font-size: var(--font-size-h1); }
+    h2 { font-size: var(--font-size-h2); }
+    h3 { font-size: var(--font-size-h3); }
+
+    code {
+      background-color: var(--color-secondary);
+      border-radius: var(--radius-sm);
+      padding: 2px 6px;
+      font-family: var(--font-code);
+      font-size: var(--font-size-small);
+    }
+
+    pre {
+      background-color: var(--color-secondary);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-family: var(--font-code);
+      overflow-x: auto;
+    }
+
+    blockquote {
+      border-left: 4px solid var(--color-primary);
+      padding-left: 16px;
+      color: var(--color-muted-foreground);
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: underline;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 24px 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+
+      th, td {
+        border: 1px solid var(--color-border);
+        padding: 8px 12px;
+        text-align: left;
+      }
+
+      th {
+        background-color: var(--color-secondary);
+        font-weight: 600;
+      }
+    }
+
+    /* Fenced directive blocks shown as code in editor */
+    .fenced-directive {
+      background-color: var(--color-secondary);
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--color-border);
+      padding: 12px 16px;
+      font-family: var(--font-code);
+      font-size: var(--font-size-small);
+      color: var(--color-muted-foreground);
+    }
+  }
+}
+
+/* Override Nord theme defaults to match our tokens */
+.milkdown {
+  background-color: transparent !important;
+  color: var(--color-foreground) !important;
+}
