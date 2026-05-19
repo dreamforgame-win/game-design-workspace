@@ -1,6 +1,7 @@
 'use client'
 
-import { Plus, Search } from 'lucide-react'
+import { Plus, Search, LogOut } from 'lucide-react'
+import { signOut } from 'next-auth/react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -16,8 +17,8 @@ interface DocumentItem {
   theme: string
   wordCount: number
   isPublic: boolean
-  updatedAt: Date
-  createdAt: Date
+  updatedAt: string | Date
+  createdAt: string | Date
 }
 
 interface WorkspaceClientProps {
@@ -71,6 +72,18 @@ export function WorkspaceClient({ documents }: WorkspaceClientProps) {
             <Plus size={16} className="mr-1" />
             新建
           </Button>
+
+          {/* Logout */}
+          <button
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="inline-flex items-center justify-center h-10 w-10 rounded-[var(--radius-md)] transition-colors min-h-[44px] min-w-[44px]"
+            style={{
+              color: 'var(--color-muted-foreground)',
+            }}
+            aria-label="退出登录"
+          >
+            <LogOut size={16} />
+          </button>
         </div>
       </header>
 

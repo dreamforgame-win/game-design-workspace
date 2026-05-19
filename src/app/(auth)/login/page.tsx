@@ -16,7 +16,7 @@ export default function LoginPage() {
 
     setIsLoading(true)
     try {
-      await signIn('email', { email, redirect: false })
+      await signIn('email', { email, redirect: false, callbackUrl: '/workspace' })
       setSent(true)
     } catch {
       // Error handled by NextAuth

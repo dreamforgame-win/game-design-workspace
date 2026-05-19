@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/features/themes/theme-provider'
+import { AuthProvider } from '@/features/auth/auth-provider'
 import './globals.css'
 
 const inter = Inter({
@@ -24,19 +25,21 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" className={inter.variable} suppressHydrationWarning>
       <body className="min-h-screen relative">
-        <ThemeProvider defaultTheme="black-gold">
-          {children}
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                background: 'var(--color-card)',
-                color: 'var(--color-card-foreground)',
-                border: '1px solid var(--color-border)',
-              },
-            }}
-          />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider defaultTheme="black-gold">
+            {children}
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                style: {
+                  background: 'var(--color-card)',
+                  color: 'var(--color-card-foreground)',
+                  border: '1px solid var(--color-border)',
+                },
+              }}
+            />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )

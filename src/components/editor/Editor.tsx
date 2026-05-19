@@ -1,13 +1,12 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useCallback } from 'react'
 import { Editor, rootCtx, defaultValueCtx } from '@milkdown/core'
 import { commonmark } from '@milkdown/preset-commonmark'
 import { gfm } from '@milkdown/preset-gfm'
 import { nord } from '@milkdown/theme-nord'
 import { listener, listenerCtx } from '@milkdown/plugin-listener'
 import { history } from '@milkdown/plugin-history'
-import { useEditor } from '@milkdown/react'
 import '@milkdown/theme-nord/style.css'
 
 interface MilkdownEditorProps {
@@ -19,11 +18,19 @@ export function MilkdownEditor({ initialValue, onChange }: MilkdownEditorProps) 
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
 
-  useEditor((root) =>
+  const initialValueRef = useRef(initialValue)
+  initialValueRef.current = initialValue
+
+  const hasCreated = useRef(false)
+
+  const editorRef = useCallback((root: HTMLDivElement | null) => {
+    if (!root || hasCreated.current) return
+    hasCreated.current = true
+
     Editor.make()
       .config((ctx) => {
         ctx.set(rootCtx, root)
-        ctx.set(defaultValueCtx, initialValue)
+        ctx.set(defaultValueCtx, initialValueRef.current)
         const listener = ctx.get(listenerCtx)
         listener.markdownUpdated((_ctx, markdown) => {
           onChangeRef.current(markdown)
@@ -34,9 +41,8 @@ export function MilkdownEditor({ initialValue, onChange }: MilkdownEditorProps) 
       .use(gfm)
       .use(listener)
       .use(history)
-  )
-
-  const ref = useRef<HTMLDivElement>(null)
+      .create()
+  }, [])
 
   return (
     <div
@@ -46,7 +52,7 @@ export function MilkdownEditor({ initialValue, onChange }: MilkdownEditorProps) 
         color: 'var(--color-foreground)',
       }}
     >
-      <div ref={ref} className="prose-editor" />
+      <div ref={editorRef} className="prose-editor" />
     </div>
   )
 }

@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-// notFound is handled by the server page component
+import { useState, useCallback, useEffect } from 'react'
 import { MarkdownRenderer } from '@/components/renderer/MarkdownRenderer'
 import { MilkdownEditor } from '@/components/editor/Editor'
 import { EditorToolbar } from '@/components/editor/toolbar'
 import { EditorSidebar } from '@/components/editor/sidebar'
 import { useEditorStore } from '@/stores/editor-store'
 import { useAutoSave } from '@/hooks/useAutoSave'
+import { useTheme } from '@/hooks/useTheme'
+import { updateDocument } from '@/features/documents/actions'
 
 interface EditorLayoutProps {
   document: {
@@ -24,6 +25,7 @@ export function EditorLayout({ document }: EditorLayoutProps) {
   const {
     content,
     setContent,
+    initContent,
     isDirty,
     isSaving,
     showPreview,
@@ -32,22 +34,36 @@ export function EditorLayout({ document }: EditorLayoutProps) {
     toggleSidebar,
   } = useEditorStore()
 
-  const [theme, setTheme] = useState(document.theme)
+  const { setTheme: setGlobalTheme } = useTheme()
+  const [activeTheme, setActiveTheme] = useState(document.theme)
 
-  // Initialize store with document content on first render
-  const initialized = useState(() => {
-    setContent(document.content)
-    return true
-  })[0]
+  // Initialize store with document content on mount (without marking dirty)
+  useEffect(() => {
+    initContent(document.content)
+    setGlobalTheme(document.theme as any)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-save
   useAutoSave(document.slug)
 
   const handleContentChange = useCallback(
     (markdown: string) => {
-      setContent(markdown)
+      // Only mark dirty if content actually changed from original
+      if (markdown !== document.content) {
+        setContent(markdown)
+      }
     },
-    [setContent]
+    [setContent, document.content]
+  )
+
+  const handleThemeChange = useCallback(
+    async (newTheme: string) => {
+      setActiveTheme(newTheme)
+      setGlobalTheme(newTheme as any)
+      // Persist theme to document
+      await updateDocument(document.slug, { theme: newTheme })
+    },
+    [document.slug, setGlobalTheme]
   )
 
   return (
@@ -80,7 +96,6 @@ export function EditorLayout({ document }: EditorLayoutProps) {
               borderColor: 'var(--color-border)',
               backgroundColor: 'var(--color-background)',
             }}
-            data-theme={theme === 'black-gold' ? undefined : theme}
           >
             <MarkdownRenderer content={content || document.content} />
           </div>
@@ -89,8 +104,8 @@ export function EditorLayout({ document }: EditorLayoutProps) {
         {/* Sidebar */}
         {showSidebar && (
           <EditorSidebar
-            theme={theme}
-            onThemeChange={setTheme}
+            theme={activeTheme}
+            onThemeChange={handleThemeChange}
           />
         )}
       </div>

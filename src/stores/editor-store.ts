@@ -4,6 +4,7 @@ interface EditorState {
   // Content
   content: string
   setContent: (content: string) => void
+  initContent: (content: string) => void
 
   // Save state
   isDirty: boolean
@@ -24,6 +25,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   // Content
   content: '',
   setContent: (content) => set({ content, isDirty: true }),
+  initContent: (content) => set({ content, isDirty: false }),
 
   // Save state
   isDirty: false,
