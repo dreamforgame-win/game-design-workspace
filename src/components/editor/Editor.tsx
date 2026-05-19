@@ -24,10 +24,9 @@ export function MilkdownEditor({ initialValue, onChange }: MilkdownEditorProps) 
       .config((ctx) => {
         ctx.set(rootCtx, root)
         ctx.set(defaultValueCtx, initialValue)
-        ctx.set(listenerCtx, {
-          markdown: [...(ctx.get(listenerCtx).markdown ?? []), (md: string) => {
-            onChangeRef.current(md)
-          }],
+        const listener = ctx.get(listenerCtx)
+        listener.markdownUpdated((ctx, markdown) => {
+          onChangeRef.current(markdown)
         })
       })
       .config(nord)
