@@ -87,8 +87,8 @@ export function createMarkdownProcessor() {
     .use(remarkGfm)
     .use(remarkDirective)
     .use(remarkDirectiveToHast)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .use(remarkRehype as any, { allowDangerousHtml: true })
+    // @ts-expect-error remark-rehype v11 has incompatible type signatures with unified v11
+    .use(remarkRehype, { allowDangerousHtml: true })
 }
 
 /**
