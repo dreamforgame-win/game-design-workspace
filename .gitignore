@@ -36,3 +36,6 @@ prisma/migrations/
 # IDE
 .idea/
 .vscode/
+
+# Deploy scripts (local only)
+deploy.bat
