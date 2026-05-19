@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function PublicNotFound() {
   return (
     <main className="min-h-screen flex items-center justify-center px-4">
@@ -17,7 +19,7 @@ export default function PublicNotFound() {
         >
           文档不存在或尚未公开
         </p>
-        <a
+        <Link
           href="/"
           className="inline-flex items-center justify-center h-11 px-5 rounded-[var(--radius-md)] text-sm font-medium transition-colors"
           style={{
@@ -26,7 +28,7 @@ export default function PublicNotFound() {
           }}
         >
           返回首页
-        </a>
+        </Link>
       </div>
     </main>
   )
