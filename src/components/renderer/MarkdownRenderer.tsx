@@ -126,7 +126,7 @@ function renderMarkdown(markdown: string): React.ReactNode[] {
         5: 'var(--font-size-h5)',
         6: 'var(--font-size-h6)',
       }
-      const Tag = `h${level}` as keyof JSX.IntrinsicElements
+      const Tag = `h${level}` as React.ElementType
       elements.push(
         <Tag
           key={key++}
