@@ -3,6 +3,7 @@
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
 import { Globe, Lock, ExternalLink } from 'lucide-react'
+import { VersionPanel } from './version-panel'
 
 interface SidebarProps {
   theme: string
@@ -10,6 +11,7 @@ interface SidebarProps {
   isPublic: boolean
   onTogglePublic: () => void
   slug: string
+  onRestore?: (content: string) => void
 }
 
 export function EditorSidebar({
@@ -18,6 +20,7 @@ export function EditorSidebar({
   isPublic,
   onTogglePublic,
   slug,
+  onRestore,
 }: SidebarProps) {
   const { allThemes } = useTheme()
 
@@ -85,7 +88,7 @@ export function EditorSidebar({
               key={t.id}
               onClick={() => onThemeChange(t.id)}
               className={cn(
-                'text-left px-3 py-2 rounded-[var(--radius-sm)] text-sm transition-colors min-h-[44px]',
+                'flex items-center gap-2.5 text-left px-3 py-2 rounded-[var(--radius-sm)] text-sm transition-colors min-h-[44px]',
               )}
               style={{
                 backgroundColor:
@@ -94,14 +97,34 @@ export function EditorSidebar({
                   theme === t.id ? 'var(--color-foreground)' : 'var(--color-muted-foreground)',
               }}
             >
-              <span className="font-medium">{t.displayName}</span>
-              <span className="block text-xs mt-0.5" style={{ color: 'var(--color-muted-foreground)' }}>
-                {t.description}
-              </span>
+              {/* Theme preview swatch */}
+              <div
+                className="shrink-0 w-6 h-6 rounded-[var(--radius-sm)] border"
+                style={{
+                  backgroundColor: t.colors.background,
+                  borderColor: t.colors.border,
+                }}
+              >
+                <div
+                  className="w-full h-full rounded-[var(--radius-sm)]"
+                  style={{
+                    background: `linear-gradient(135deg, ${t.colors.background} 50%, ${t.colors.primary} 50%)`,
+                  }}
+                />
+              </div>
+              <div className="min-w-0">
+                <span className="font-medium">{t.displayName}</span>
+                <span className="block text-xs mt-0.5 truncate" style={{ color: 'var(--color-muted-foreground)' }}>
+                  {t.description}
+                </span>
+              </div>
             </button>
           ))}
         </div>
       </div>
+
+      {/* Version History */}
+      <VersionPanel slug={slug} onRestore={onRestore} />
 
       {/* TOC placeholder */}
       <div>

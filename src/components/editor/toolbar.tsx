@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { MonitorPlay } from 'lucide-react'
 
 interface ToolbarProps {
   onSave?: () => void
@@ -10,6 +11,7 @@ interface ToolbarProps {
   onToggleSidebar?: () => void
   showPreview?: boolean
   showSidebar?: boolean
+  onPresent?: () => void
 }
 
 export function EditorToolbar({
@@ -20,6 +22,7 @@ export function EditorToolbar({
   onToggleSidebar,
   showPreview,
   showSidebar,
+  onPresent,
 }: ToolbarProps) {
   return (
     <div
@@ -61,6 +64,21 @@ export function EditorToolbar({
           />
         )}
       </div>
+
+      {/* Present */}
+      {onPresent && (
+        <button
+          onClick={onPresent}
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-[var(--radius-sm)] text-xs transition-colors min-h-[44px]"
+          style={{
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-primary-foreground)',
+          }}
+        >
+          <MonitorPlay size={14} />
+          演示
+        </button>
+      )}
 
       {/* Toggle buttons */}
       <button

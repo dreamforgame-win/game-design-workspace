@@ -1,8 +1,19 @@
 'use client'
 
 import { useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import { parseMarkdown } from '@/lib/markdown'
 import { directiveComponentMap } from './directives/directive-map'
+
+const MermaidDiagram = dynamic(() => import('./MermaidDiagram'), {
+  ssr: false,
+  loading: () => (
+    <div
+      className="h-32 animate-pulse rounded-[var(--radius-md)] my-4"
+      style={{ backgroundColor: 'var(--color-muted)' }}
+    />
+  ),
+})
 
 interface MarkdownRendererProps {
   content: string
@@ -155,6 +166,16 @@ function renderMarkdown(markdown: string): React.ReactNode[] {
         i++
       }
       i++ // skip closing ```
+      const code = codeLines.join('\n')
+
+      // Mermaid diagram
+      if (lang === 'mermaid') {
+        elements.push(
+          <MermaidDiagram key={key++} code={code} />
+        )
+        continue
+      }
+
       elements.push(
         <pre
           key={key++}
@@ -173,7 +194,7 @@ function renderMarkdown(markdown: string): React.ReactNode[] {
               {lang}
             </span>
           )}
-          <code>{codeLines.join('\n')}</code>
+          <code>{code}</code>
         </pre>
       )
       continue

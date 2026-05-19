@@ -1,7 +1,9 @@
+import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import { getPublicDocument } from '@/features/documents/actions'
 import { MarkdownRenderer } from '@/components/renderer/MarkdownRenderer'
 import { PublicThemeWrapper } from '@/components/renderer/public-theme-wrapper'
+import { PublicPresentationWrapper } from '@/components/presentation/public-presentation-wrapper'
 
 interface PublicPageProps {
   params: Promise<{ slug: string }>
@@ -45,6 +47,15 @@ export default async function PublicPage({ params }: PublicPageProps) {
           </footer>
         </article>
       </main>
+
+      {/* Presentation mode overlay (triggered by ?mode=present) */}
+      <Suspense fallback={null}>
+        <PublicPresentationWrapper
+          slug={slug}
+          content={document.content}
+          theme={document.theme}
+        />
+      </Suspense>
     </PublicThemeWrapper>
   )
 }

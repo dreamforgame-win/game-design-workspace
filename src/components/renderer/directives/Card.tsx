@@ -40,7 +40,7 @@ export function CardDirective({ title, icon, content, className }: CardDirective
   return (
     <div
       className={cn(
-        'rounded-[var(--radius-md)] border p-4',
+        'directive-card rounded-[var(--radius-md)] border p-4 transition-all',
         className
       )}
       style={{

@@ -5,6 +5,7 @@ import { MarkdownRenderer } from '@/components/renderer/MarkdownRenderer'
 import { MilkdownEditor } from '@/components/editor/Editor'
 import { EditorToolbar } from '@/components/editor/toolbar'
 import { EditorSidebar } from '@/components/editor/sidebar'
+import { PresentationMode } from '@/components/presentation/presentation-mode'
 import { useEditorStore } from '@/stores/editor-store'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { useTheme } from '@/hooks/useTheme'
@@ -37,6 +38,8 @@ export function EditorLayout({ document }: EditorLayoutProps) {
   const { setTheme: setGlobalTheme } = useTheme()
   const [activeTheme, setActiveTheme] = useState(document.theme)
   const [isPublic, setIsPublic] = useState(document.isPublic)
+  const [isPresenting, setIsPresenting] = useState(false)
+  const [editorKey, setEditorKey] = useState(0)
 
   // Initialize store with document content on mount (without marking dirty)
   useEffect(() => {
@@ -74,6 +77,11 @@ export function EditorLayout({ document }: EditorLayoutProps) {
     }
   }, [document.slug])
 
+  const handleRestore = useCallback((restoredContent: string) => {
+    initContent(restoredContent)
+    setEditorKey((k) => k + 1)
+  }, [initContent])
+
   return (
     <div className="h-screen flex flex-col">
       {/* Toolbar */}
@@ -84,6 +92,7 @@ export function EditorLayout({ document }: EditorLayoutProps) {
         onToggleSidebar={toggleSidebar}
         showPreview={showPreview}
         showSidebar={showSidebar}
+        onPresent={() => setIsPresenting(true)}
       />
 
       {/* Main area */}
@@ -91,7 +100,8 @@ export function EditorLayout({ document }: EditorLayoutProps) {
         {/* Editor pane */}
         <div className="flex-1 overflow-hidden">
           <MilkdownEditor
-            initialValue={document.content}
+            key={editorKey}
+            initialValue={content || document.content}
             onChange={handleContentChange}
           />
         </div>
@@ -117,9 +127,19 @@ export function EditorLayout({ document }: EditorLayoutProps) {
             isPublic={isPublic}
             onTogglePublic={handleTogglePublic}
             slug={document.slug}
+            onRestore={handleRestore}
           />
         )}
       </div>
+
+      {/* Presentation overlay */}
+      {isPresenting && (
+        <PresentationMode
+          content={content || document.content}
+          theme={activeTheme}
+          onExit={() => setIsPresenting(false)}
+        />
+      )}
     </div>
   )
 }

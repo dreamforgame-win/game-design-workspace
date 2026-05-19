@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { useEditorStore } from '@/stores/editor-store'
 import { updateDocument } from '@/features/documents/actions'
+import { createVersion } from '@/features/documents/version-actions'
 import { toast } from 'sonner'
 
 const SAVE_DEBOUNCE_MS = 2000
@@ -10,6 +11,7 @@ const SAVE_DEBOUNCE_MS = 2000
 /**
  * Auto-save hook: debounces saves after content changes.
  * Fires 2000ms after last edit. Shows status indicator.
+ * Also creates version snapshots (max every 5 minutes).
  */
 export function useAutoSave(slug: string) {
   const { content, isDirty, setIsSaving, markSaved } = useEditorStore()
@@ -26,6 +28,9 @@ export function useAutoSave(slug: string) {
     try {
       await updateDocument(slug, { content: contentRef.current })
       markSaved()
+
+      // Create version snapshot (throttled to 5 min on server)
+      await createVersion(slug, contentRef.current)
     } catch (error) {
       console.error('Auto-save failed:', error)
       toast.error('保存失败，请重试')
