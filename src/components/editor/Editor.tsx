@@ -19,7 +19,7 @@ export function MilkdownEditor({ initialValue, onChange }: MilkdownEditorProps) 
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
 
-  const { get } = useEditor((root) =>
+  useEditor((root) =>
     Editor.make()
       .config((ctx) => {
         ctx.set(rootCtx, root)
