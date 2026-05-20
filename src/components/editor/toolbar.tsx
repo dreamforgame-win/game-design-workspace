@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { MonitorPlay, Focus, FocusOff } from 'lucide-react'
+import { MonitorPlay, Eye, EyeOff } from 'lucide-react'
 
 interface ToolbarProps {
   onSave?: () => void
@@ -91,7 +91,7 @@ export function EditorToolbar({
           }}
           aria-label={focusMode ? '退出专注模式' : '专注模式'}
         >
-          {focusMode ? <FocusOff size={16} /> : <Focus size={16} />}
+          {focusMode ? <EyeOff size={16} /> : <Eye size={16} />}
         </button>
       )}
 

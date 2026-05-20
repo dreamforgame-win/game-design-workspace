@@ -7,8 +7,6 @@ import { gfm } from '@milkdown/preset-gfm'
 import { nord } from '@milkdown/theme-nord'
 import { listener, listenerCtx } from '@milkdown/plugin-listener'
 import { history } from '@milkdown/plugin-history'
-import { Plugin, PluginKey } from 'prosemirror-state'
-import { Decoration, DecorationSet } from 'prosemirror-view'
 import type { EditorView } from 'prosemirror-view'
 import { uploadImage } from '@/features/upload/image-upload'
 import { cn } from '@/lib/utils'
@@ -60,45 +58,6 @@ const SLASH_ITEMS: SlashItem[] = [
 ]
 
 /* ============================================
-   Focus Mode ProseMirror Plugin
-   ============================================ */
-
-const focusModeKey = new PluginKey('focus-mode')
-
-function createFocusModePlugin() {
-  return new Plugin({
-    key: focusModeKey,
-    state: {
-      init() {
-        return DecorationSet.empty
-      },
-      apply(tr, set) {
-        set = set.map(tr.mapping, tr.doc)
-        const { from, to } = tr.selection
-        const decorations: Decoration[] = []
-
-        tr.doc.nodesBetween(from, to, (node, pos) => {
-          if (node.type.name === 'paragraph') {
-            decorations.push(
-              Decoration.node(pos, pos + node.nodeSize, {
-                class: 'active-paragraph',
-              })
-            )
-          }
-        })
-
-        return DecorationSet.create(tr.doc, decorations)
-      },
-    },
-    props: {
-      decorations(state) {
-        return this.getState(state)
-      },
-    },
-  })
-}
-
-/* ============================================
    Component
    ============================================ */
 
@@ -122,6 +81,51 @@ export function MilkdownEditor({ initialValue, onChange, focusMode = false }: Mi
 
   const slashIndexRef = useRef(slashIndex)
   slashIndexRef.current = slashIndex
+
+  // Focus mode: highlight current paragraph via DOM
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const proseMirror = container.querySelector('.ProseMirror') as HTMLElement | null
+    if (!proseMirror) return
+
+    const updateActiveParagraph = () => {
+      const selection = window.getSelection()
+      if (!selection || selection.rangeCount === 0) return
+
+      const range = selection.getRangeAt(0)
+      const node = range.commonAncestorContainer
+      const paragraph = node instanceof Element
+        ? node.closest('p')
+        : node.parentElement?.closest('p')
+
+      if (!paragraph) return
+
+      // Remove active class from all paragraphs
+      proseMirror.querySelectorAll('p.active-paragraph').forEach((p) => {
+        p.classList.remove('active-paragraph')
+      })
+
+      // Add to current
+      paragraph.classList.add('active-paragraph')
+    }
+
+    if (focusMode) {
+      proseMirror.addEventListener('click', updateActiveParagraph)
+      proseMirror.addEventListener('keyup', updateActiveParagraph)
+      // Initial highlight
+      updateActiveParagraph()
+    }
+
+    return () => {
+      proseMirror.removeEventListener('click', updateActiveParagraph)
+      proseMirror.removeEventListener('keyup', updateActiveParagraph)
+      proseMirror.querySelectorAll('p.active-paragraph').forEach((p) => {
+        p.classList.remove('active-paragraph')
+      })
+    }
+  }, [focusMode])
 
   // Insert text into editor at current selection
   const insertText = useCallback((text: string, replaceFrom?: number, replaceTo?: number) => {
@@ -268,7 +272,6 @@ export function MilkdownEditor({ initialValue, onChange, focusMode = false }: Mi
         .use(gfm)
         .use(listener)
         .use(history)
-        .use(createFocusModePlugin())
         .create()
         .then((editor) => {
           editorInstanceRef.current = editor
