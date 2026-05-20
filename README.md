@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/icon/logo_long.png" alt="Game Design Workspace" width="500" />
+  <img src="./public/icon/logo_long.png" alt="Game Design Workspace" width="500" />
 </p>
 
 <h1 align="center">Game Design Workspace</h1>
