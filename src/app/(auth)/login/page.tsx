@@ -31,9 +31,12 @@ export default function LoginPage() {
   const handleTestLogin = async () => {
     setIsTestLoading(true)
     try {
-      await signIn('test', { callbackUrl: '/workspace' })
+      const res = await fetch('/api/dev-login', { method: 'POST' })
+      if (res.ok) {
+        window.location.href = '/workspace'
+      }
     } catch {
-      // Error handled by NextAuth
+      // Error handled silently
     } finally {
       setIsTestLoading(false)
     }
