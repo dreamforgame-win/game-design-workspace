@@ -5,10 +5,13 @@ import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const [isTestLoading, setIsTestLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,6 +25,17 @@ export default function LoginPage() {
       // Error handled by NextAuth
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleTestLogin = async () => {
+    setIsTestLoading(true)
+    try {
+      await signIn('test', { callbackUrl: '/workspace' })
+    } catch {
+      // Error handled by NextAuth
+    } finally {
+      setIsTestLoading(false)
     }
   }
 
@@ -90,6 +104,27 @@ export default function LoginPage() {
           >
             发送登录链接
           </Button>
+
+          {isDev && (
+            <>
+              <div className="flex items-center gap-3 my-2">
+                <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
+                <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                  开发环境
+                </span>
+                <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                isLoading={isTestLoading}
+                className="w-full"
+                onClick={handleTestLogin}
+              >
+                快速测试登录
+              </Button>
+            </>
+          )}
         </form>
       </div>
     </main>
