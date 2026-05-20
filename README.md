@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/dreamforgame-win/game-design-workspace/main/public/icon/logo_long.png" alt="Game Design Workspace" width="500" />
+  <img src="https://raw.githubusercontent.com/dreamforgame-win/game-design-workspace/main/public/logo/logo_long.png" alt="Game Design Workspace" width="500" />
 </p>
 
 <h1 align="center">Game Design Workspace</h1>
