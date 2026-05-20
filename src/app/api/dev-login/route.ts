@@ -3,6 +3,8 @@ import { encode } from 'next-auth/jwt'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+export const runtime = 'nodejs'
+
 /**
  * Development-only: instant login without email.
  * Creates a test user (if not exists) and sets a valid NextAuth session cookie.
