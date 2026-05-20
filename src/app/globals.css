@@ -353,3 +353,79 @@
   background-color: transparent !important;
   color: var(--color-foreground) !important;
 }
+
+/* ============================================
+   Resizable Panels
+   ============================================ */
+[data-panel-resize-handle-id] {
+  flex-shrink: 0;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+[data-panel-resize-handle-id]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+}
+
+[data-panel-group-id] {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+[data-panel-id] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================
+   Focus Mode
+   ============================================ */
+.focus-mode .ProseMirror p {
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.focus-mode .ProseMirror p.active-paragraph {
+  opacity: 1;
+}
+
+/* Also dim headings, lists, blockquotes in focus mode */
+.focus-mode .ProseMirror h1,
+.focus-mode .ProseMirror h2,
+.focus-mode .ProseMirror h3,
+.focus-mode .ProseMirror h4,
+.focus-mode .ProseMirror h5,
+.focus-mode .ProseMirror h6,
+.focus-mode .ProseMirror ul,
+.focus-mode .ProseMirror ol,
+.focus-mode .ProseMirror blockquote,
+.focus-mode .ProseMirror pre {
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.focus-mode .ProseMirror p.active-paragraph ~ h1,
+.focus-mode .ProseMirror p.active-paragraph ~ h2,
+.focus-mode .ProseMirror p.active-paragraph ~ h3,
+.focus-mode .ProseMirror p.active-paragraph ~ ul,
+.focus-mode .ProseMirror p.active-paragraph ~ ol,
+.focus-mode .ProseMirror p.active-paragraph ~ blockquote,
+.focus-mode .ProseMirror p.active-paragraph ~ pre,
+.focus-mode .ProseMirror h1:has(+ p.active-paragraph),
+.focus-mode .ProseMirror h2:has(+ p.active-paragraph),
+.focus-mode .ProseMirror h3:has(+ p.active-paragraph) {
+  opacity: 1;
+}
+
+/* Keep the active paragraph's adjacent elements visible too */
+.focus-mode .ProseMirror .active-paragraph,
+.focus-mode .ProseMirror .active-paragraph + *,
+.focus-mode .ProseMirror *:has(+ .active-paragraph) {
+  opacity: 1;
+}

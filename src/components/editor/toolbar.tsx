@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { MonitorPlay } from 'lucide-react'
+import { MonitorPlay, Focus, FocusOff } from 'lucide-react'
 
 interface ToolbarProps {
   onSave?: () => void
@@ -12,6 +12,9 @@ interface ToolbarProps {
   showPreview?: boolean
   showSidebar?: boolean
   onPresent?: () => void
+  wordCount?: number
+  focusMode?: boolean
+  onToggleFocusMode?: () => void
 }
 
 export function EditorToolbar({
@@ -23,6 +26,9 @@ export function EditorToolbar({
   showPreview,
   showSidebar,
   onPresent,
+  wordCount = 0,
+  focusMode = false,
+  onToggleFocusMode,
 }: ToolbarProps) {
   return (
     <div
@@ -44,6 +50,16 @@ export function EditorToolbar({
       {/* Spacer */}
       <div className="flex-1" />
 
+      {/* Word count */}
+      {wordCount > 0 && (
+        <span
+          className="text-xs tabular-nums hidden sm:inline"
+          style={{ color: 'var(--color-muted-foreground)' }}
+        >
+          {wordCount} 字
+        </span>
+      )}
+
       {/* Save indicator */}
       <div className="flex items-center gap-2">
         {isSaving && (
@@ -64,6 +80,20 @@ export function EditorToolbar({
           />
         )}
       </div>
+
+      {/* Focus mode toggle */}
+      {onToggleFocusMode && (
+        <button
+          onClick={onToggleFocusMode}
+          className="p-2 rounded-[var(--radius-sm)] transition-colors min-h-[44px] min-w-[44px]"
+          style={{
+            color: focusMode ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+          }}
+          aria-label={focusMode ? '退出专注模式' : '专注模式'}
+        >
+          {focusMode ? <FocusOff size={16} /> : <Focus size={16} />}
+        </button>
+      )}
 
       {/* Present */}
       {onPresent && (

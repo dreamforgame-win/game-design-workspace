@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { splitSlides } from '@/lib/slide-splitter'
+import { splitSlides, type SlideData } from '@/lib/slide-splitter'
 
 interface UsePresentationOptions {
   content: string
@@ -9,7 +9,7 @@ interface UsePresentationOptions {
 }
 
 interface UsePresentationReturn {
-  slides: string[]
+  slides: SlideData[]
   currentIndex: number
   totalSlides: number
   goTo: (index: number) => void
@@ -20,10 +20,16 @@ interface UsePresentationReturn {
   enterFullscreen: () => void
   exitFullscreen: () => void
   isFullscreen: boolean
+  currentNotes: string
+  currentTransition: 'slide' | 'fade' | 'zoom'
+  touchStartX: React.MutableRefObject<number | null>
+  touchEndX: React.MutableRefObject<number | null>
+  handleTouchStart: (e: React.TouchEvent) => void
+  handleTouchEnd: (e: React.TouchEvent) => void
 }
 
 /**
- * Presentation mode state + keyboard navigation + fullscreen management.
+ * Presentation mode state + keyboard navigation + fullscreen + touch.
  */
 export function usePresentation({ content, onExit }: UsePresentationOptions): UsePresentationReturn {
   const slides = splitSlides(content)
@@ -31,9 +37,15 @@ export function usePresentation({ content, onExit }: UsePresentationOptions): Us
   const [isFullscreen, setIsFullscreen] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
 
+  // Touch state for swipe
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
+
   const totalSlides = slides.length
   const isFirst = currentIndex === 0
   const isLast = currentIndex === totalSlides - 1
+  const currentNotes = slides[currentIndex]?.notes || ''
+  const currentTransition = slides[currentIndex]?.transition || 'slide'
 
   const goTo = useCallback((index: number) => {
     setCurrentIndex(Math.max(0, Math.min(index, totalSlides - 1)))
@@ -61,6 +73,28 @@ export function usePresentation({ content, onExit }: UsePresentationOptions): Us
       document.exitFullscreen().catch(() => {})
     }
   }, [])
+
+  // Touch handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.changedTouches[0].screenX
+  }, [])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].screenX
+    if (touchStartX.current == null || touchEndX.current == null) return
+
+    const diff = touchStartX.current - touchEndX.current
+    const threshold = 50
+
+    if (diff > threshold) {
+      goNext()
+    } else if (diff < -threshold) {
+      goPrev()
+    }
+
+    touchStartX.current = null
+    touchEndX.current = null
+  }, [goNext, goPrev])
 
   // Keyboard navigation
   useEffect(() => {
@@ -123,6 +157,12 @@ export function usePresentation({ content, onExit }: UsePresentationOptions): Us
     enterFullscreen,
     exitFullscreen,
     isFullscreen,
+    currentNotes,
+    currentTransition,
+    touchStartX,
+    touchEndX,
+    handleTouchStart,
+    handleTouchEnd,
   }
 }
 

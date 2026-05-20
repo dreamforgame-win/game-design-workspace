@@ -4,6 +4,11 @@ import { CardDirective } from './Card'
 import { WarningDirective } from './Warning'
 import { SystemDirective } from './System'
 import { FeatureDirective } from './Feature'
+import { Loop } from './Loop'
+import { Balance } from './Balance'
+import { Economy } from './Economy'
+import { Matrix } from './Matrix'
+import { Stats } from './Stats'
 
 /**
  * Maps directive element names (from hast) to React components.
@@ -19,4 +24,9 @@ export const directiveComponentMap: Record<string, React.ComponentType<any>> = {
   'directive-warning': WarningDirective,
   'directive-system': SystemDirective,
   'directive-feature': FeatureDirective,
+  'directive-loop': Loop,
+  'directive-balance': Balance,
+  'directive-economy': Economy,
+  'directive-matrix': Matrix,
+  'directive-stats': Stats,
 }

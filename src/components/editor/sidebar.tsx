@@ -26,7 +26,7 @@ export function EditorSidebar({
 
   return (
     <aside
-      className="w-56 border-l p-4 shrink-0 overflow-auto"
+      className="h-full border-l p-4 overflow-auto"
       style={{
         borderColor: 'var(--color-border)',
         backgroundColor: 'var(--color-card)',
