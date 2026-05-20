@@ -41,7 +41,8 @@ let nextConfig: NextConfig = {
 
 if (process.env.ANALYZE === 'true') {
   try {
-    const withBundleAnalyzer = (await import('@next/bundle-analyzer')).default
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const withBundleAnalyzer = require('@next/bundle-analyzer').default
     nextConfig = withBundleAnalyzer({ enabled: true })(nextConfig)
   } catch {
     // Bundle analyzer not installed, skip
