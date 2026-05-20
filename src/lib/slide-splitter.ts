@@ -13,7 +13,7 @@ export interface SlideData {
   transition: 'slide' | 'fade' | 'zoom'
 }
 
-const NOTES_REGEX = /<!--\s*notes:\s*(.*?)\s*-->/is
+const NOTES_REGEX = /<!--\s*notes:\s*([\s\S]*?)\s*-->/i
 const TRANSITION_REGEX = /<!--\s*transition:\s*(fade|slide|zoom)\s*-->/i
 
 function parseSlide(raw: string): SlideData {

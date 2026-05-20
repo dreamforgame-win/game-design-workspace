@@ -1,6 +1,12 @@
-# Game Design Workspace
+<p align="center">
+  <img src="public/icon/logo_long.png" alt="Game Design Workspace" width="500" />
+</p>
 
-> **把 Markdown 变成游戏设计演示。**
+<h1 align="center">Game Design Workspace</h1>
+
+<p align="center">
+  <strong>把 Markdown 变成游戏设计演示。</strong>
+</p>
 
 用你最熟悉的方式写文档，自动生成精美的可视化页面和演示幻灯片。
 
