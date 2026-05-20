@@ -7,7 +7,7 @@ interface MermaidDiagramProps {
   code: string
 }
 
-const MERMAID_THEMES: Record<string, string> = {
+const MERMAID_THEMES: Record<string, 'default' | 'dark'> = {
   'black-gold': 'dark',
   'scroll': 'default',
   'wargame': 'dark',
